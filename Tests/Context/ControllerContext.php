@@ -61,7 +61,7 @@ trait ControllerContext
      */
     public function iShouldSeeAValidKeySet()
     {
-        /**
+        /*
          * @var \Jose\JWKSetManagerInterface
          */
         $jwkset_manager = $this->getContainer()->get('jose.jwkset_manager');
