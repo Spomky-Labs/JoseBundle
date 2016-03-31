@@ -81,8 +81,7 @@ class Jose
         JWAManagerInterface $algorithm_manager,
         $server_name,
         JotManagerInterface $jot_manager = null
-    )
-    {
+    ) {
         $this->loader = $loader;
         $this->signer = $signer;
         $this->encrypter = $encrypter;
@@ -103,9 +102,9 @@ class Jose
     /**
      * Load data and try to return a JWSInterface object or a JWEInterface object.
      *
-     * @param string                     $input   A string that represents a JSON Web Token message
-     * @param \Jose\JWKSetInterface|null $jwk_set If not null, use the key set used to verify or decrypt the input, else this method should use a default keys manager.
-     * @param null|string                $detached_payload   If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
+     * @param string                     $input            A string that represents a JSON Web Token message
+     * @param \Jose\JWKSetInterface|null $jwk_set          If not null, use the key set used to verify or decrypt the input, else this method should use a default keys manager.
+     * @param null|string                $detached_payload If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
      *
      * @return \Jose\JWSInterface|\Jose\JWEInterface|null If the data has been loaded.
      */
@@ -114,7 +113,7 @@ class Jose
         $result = $this->loader->load($input);
         $loaded = null;
         if (is_array($result)) {
-            foreach($result as $temp) {
+            foreach ($result as $temp) {
                 $loaded = $this->checkResult($temp, $jwk_set, $detached_payload);
                 if (null !== $loaded) {
                     break;
@@ -136,9 +135,9 @@ class Jose
     /**
      * Load data and try to return a JWSInterface object, a JWEInterface object or a list of these objects.
      *
-     * @param string                     $input   A string that represents a JSON Web Token message
-     * @param \Jose\JWKSetInterface|null $jwk_set If not null, use the key set used to verify or decrypt the input, else this method should use a default keys manager.
-     * @param null|string                $detached_payload   If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
+     * @param string                     $input            A string that represents a JSON Web Token message
+     * @param \Jose\JWKSetInterface|null $jwk_set          If not null, use the key set used to verify or decrypt the input, else this method should use a default keys manager.
+     * @param null|string                $detached_payload If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
      *
      * @return \Jose\JWSInterface|\Jose\JWEInterface|null If the data has been loaded.
      */
@@ -146,20 +145,21 @@ class Jose
     {
         if ($input instanceof JWSInterface) {
             if (true !== $this->verifySignature($input, $jwk_set, $detached_payload)) {
-                return null;
+                return;
             }
         } elseif ($input instanceof JWEInterface) {
             if (true !== $this->decrypt($input, $jwk_set)) {
-                return null;
+                return;
             }
         }
+
         return $input;
     }
 
     /**
      * Load data and try to return a JWSInterface object, a JWEInterface object or a list of these objects.
      * If the result is a JWE, nothing is decrypted and method `decrypt` must be executed
-     * If the result is a JWS, no signature is verified and method `verifySignature` must be executed
+     * If the result is a JWS, no signature is verified and method `verifySignature` must be executed.
      *
      * @param \Jose\JWEInterface         $input   A JWE object to decrypt
      * @param \Jose\JWKSetInterface|null $jwk_set If not null, use the key set used to verify or decrypt the input, else this method should use a default keys manager.
@@ -175,9 +175,9 @@ class Jose
      * Verify the signature of the input.
      * The input must be a valid JWS. This method is usually called after the "load" method.
      *
-     * @param \Jose\JWSInterface         $input              A JWS object.
-     * @param \Jose\JWKSetInterface|null $jwk_set            If not null, the signature will be verified only using keys in the key set, else this method should use a default keys manager
-     * @param null|string                $detached_payload   If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
+     * @param \Jose\JWSInterface         $input            A JWS object.
+     * @param \Jose\JWKSetInterface|null $jwk_set          If not null, the signature will be verified only using keys in the key set, else this method should use a default keys manager
+     * @param null|string                $detached_payload If not null, the value must be the detached payload encoded in Base64 URL safe. If the input contains a payload, throws an exception.
      *
      * @return bool True if the signature has been verified, else false
      */
@@ -199,7 +199,6 @@ class Jose
     {
         return $this->loader->verify($input);
     }
-
 
     /**
      * Sign an input and convert it into JWS JSON (Compact/Flattened) Serialized representation.
@@ -241,11 +240,11 @@ class Jose
      */
     protected function populateJti(&$input, JotInterface $jot)
     {
-        if(is_array($input)) {
+        if (is_array($input)) {
             $input['jti'] = $jot->getJti();
         } elseif ($input instanceof JWTInterface) {
             $payload = $input->getPayload();
-            if(is_array($payload)) {
+            if (is_array($payload)) {
                 $payload['jti'] = $jot->getJti();
                 $input->setPayload($payload);
             }
@@ -259,7 +258,7 @@ class Jose
      */
     protected function populateData($input, JotInterface &$jot, $data)
     {
-        if(is_array($input) || ($input instanceof JWTInterface && is_array($input->getPayload()))) {
+        if (is_array($input) || ($input instanceof JWTInterface && is_array($input->getPayload()))) {
             $jot->setData($data);
             $this->jot_manager->saveJot($jot);
         }
@@ -294,7 +293,7 @@ class Jose
             ->setSenderKey($sender_key)
             ->setRecipientUnprotectedHeader($recipient_unprotected_hearder);
 
-        $encryption =  $this->encrypter->encrypt($input, [$instruction], $shared_protected_header, $shared_unprotected_header, $serialization, $aad);
+        $encryption = $this->encrypter->encrypt($input, [$instruction], $shared_protected_header, $shared_unprotected_header, $serialization, $aad);
 
         if (null !== $this->jot_manager) {
             $jot = $this->jot_manager->createJot();

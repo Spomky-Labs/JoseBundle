@@ -10,11 +10,9 @@
  */
 
 namespace SpomkyLabs\JoseBundle\Features\Context;
+
 use Behat\Gherkin\Node\PyStringNode;
-use Jose\JWEInterface;
-use Jose\JWKInterface;
 use Jose\JWKSetInterface;
-use Jose\JWSInterface;
 
 /**
  * Behat context class.
@@ -40,7 +38,7 @@ trait KeysetContext
         }
         $data = [];
         foreach ($lines->getStrings() as $line) {
-            list($key,$value) = explode(':', $line);
+            list($key, $value) = explode(':', $line);
             $data[$key] = $value;
         }
         $jwk = $this->getKeyManager()->createJWK($data);

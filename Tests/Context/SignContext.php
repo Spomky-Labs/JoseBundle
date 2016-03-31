@@ -13,7 +13,6 @@ namespace SpomkyLabs\JoseBundle\Features\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Jose\JSONSerializationModes;
-use SpomkyLabs\Jose\SignatureInstruction;
 
 /**
  * Behat context class.
@@ -84,7 +83,7 @@ trait SignContext
     {
         $data = [];
         foreach ($lines->getStrings() as $line) {
-            list($key,$value) = explode(':', $line);
+            list($key, $value) = explode(':', $line);
             $data[$key] = $value;
         }
         $jwk = $this->getKeyManager()->createJWK($data);
@@ -106,6 +105,7 @@ trait SignContext
     {
         $this->unprotected_header[$key] = $value;
     }
+
     /**
      * @When I add the claim :claim with value :value
      */

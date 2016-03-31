@@ -10,12 +10,12 @@
  */
 
 namespace SpomkyLabs\JoseBundle\Features\Context;
+
 use Behat\Gherkin\Node\PyStringNode;
 use Jose\JWEInterface;
 use Jose\JWKInterface;
 use Jose\JWKSetInterface;
 use Jose\JWSInterface;
-use Jose\JWTInterface;
 
 /**
  * Behat context class.
@@ -53,7 +53,6 @@ trait LoadContext
      */
     abstract protected function getContainer();
 
-
     /**
      * @When I try to load the following data
      */
@@ -63,7 +62,7 @@ trait LoadContext
             throw new \Exception('Please set only one line for this test.');
         }
 
-        foreach($lines->getStrings() as $data) {
+        foreach ($lines->getStrings() as $data) {
             try {
                 $this->loaded_data = $this->getLoader()->load($data, $this->getKeyset());
             } catch (\Exception $e) {
@@ -132,7 +131,6 @@ trait LoadContext
         }
     }
 
-
     /**
      * @return \SpomkyLabs\JoseBundle\Service\Jose
      */
@@ -169,7 +167,7 @@ trait LoadContext
         if (!in_array($position, ['header', 'payload'])) {
             throw new \Exception(sprintf('Supported positions are "%s"', json_encode(['header', 'payload'])));
         }
-        $value = 'header' === $position?$this->loaded_data->getHeaderValue($parameter):$this->loaded_data->getPayloadValue($parameter);
+        $value = 'header' === $position ? $this->loaded_data->getHeaderValue($parameter) : $this->loaded_data->getPayloadValue($parameter);
         if (null === $value) {
             throw new \Exception('The value is null');
         }
@@ -183,7 +181,7 @@ trait LoadContext
         if (!in_array($position, ['header', 'payload'])) {
             throw new \Exception(sprintf('Supported positions are "%s"', json_encode(['header', 'payload'])));
         }
-        $value = 'header' === $position?$this->loaded_data->getHeaderValue($parameter):$this->loaded_data->getPayloadValue($parameter);
+        $value = 'header' === $position ? $this->loaded_data->getHeaderValue($parameter) : $this->loaded_data->getPayloadValue($parameter);
         if (null !== $value) {
             throw new \Exception(sprintf('The value is not null. Its value is "%s"', $value));
         }
