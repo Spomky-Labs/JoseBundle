@@ -13,11 +13,13 @@ In the following example, we create two Signers. They will be available through 
 jose:
     signers:
         SIGNER1: # ID of the Signer. Must be unique
+            is_public: true # The service created by the bundle will be public (default)
             algorithms: # A list of algorithms
                 - 'HS256'
                 - 'HS384'
                 - 'HS512'
         SIGNER2: # ID of the Signer. Must be unique
+            is_public: true # The service created by the bundle will be public (default)
             algorithms: # A list of algorithms
                 - 'RS256'
                 - 'RS512'
@@ -32,7 +34,7 @@ use Jose\Factory\JWSFactory;
 
 // We get the key and the signer (we suppose that MY_KEY1 is a valid key)
 $key = $container->get('jose.key.MY_KEY1');
-$signer = $container->get('jose.signer.SIGNER1');
+$signer = $container->get('jose.signer.SIGNER1'); // Only if the service is public
 
 // The payload to sign
 $payload = 'Hello World!';
@@ -70,11 +72,13 @@ In the following example, we create two Verifiers. They will be available throug
 jose:
     verifiers:
         VERFIER1: # ID of the Verifier. Must be unique
+            is_public: true # The service created by the bundle will be public (default)
             algorithms: # A list of algorithms
                 - 'HS256'
                 - 'HS384'
                 - 'HS512'
         VERFIER2: # ID of the Verifier. Must be unique
+            is_public: true # The service created by the bundle will be public (default)
             algorithms: # A list of algorithms
                 - 'RS256'
                 - 'RS512'

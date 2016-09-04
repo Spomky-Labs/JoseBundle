@@ -121,7 +121,7 @@ jose:
 # Random Key Creation
 
 This bundle is able to create and rotate keys for you.
-These keys are stored in a file and served on demand. When expired, they are automatically re-created.
+These keys are stored in a file and served on demand. When expired, they are updated through a dedicated console command.
 If you need, a key may have no expiration time.
 
 Please note that parameters `storage_path`, `ttl` and `additional_values` are common for all keys.
@@ -202,3 +202,16 @@ jose:
                     alg: 'ECDH-ES'
                     use: 'enc'
 ```
+
+## Key Rotation
+
+All random keys can be refreshed through a console command after a period of time.
+
+In the following example, the command will generate a new key if the actual key is older than 86400 seconds (24 hrs):
+
+```sh
+bin/console spomky-labs:jose:rotate-keys --key="jose.key.key_id" --ttl=86400
+```
+
+_Please note that the service `jose.key.key_id` must be a valid random key._
+

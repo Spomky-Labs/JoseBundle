@@ -11,9 +11,9 @@ jose:
         keyset_id: # ID of the key set. When loaded, the service "jose.key_set.keyset_id" will be created
             keys: # Type of key set. In this case, the key set is created using keys previously loaded.
                 id:
-                    - key_id1
-                    - key_id2
-                    - key_id3
+                    - 'jose.key.key_id1'
+                    - 'jose.key.key_id2'
+                    - 'jose.key.key_id3'
 ```
 
 # From a JWKSet

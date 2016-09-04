@@ -1,7 +1,7 @@
 Operation Services
 ==================
 
-This bundle is able to create services to sing, verify, encrypt and decrypt the JWS/JWE you receive.
+This bundle is able to create services to sign, verify, encrypt and decrypt the JWS/JWE you receive.
 For each service, you can set as many algorithms as you need.
 
 # Signer Service
