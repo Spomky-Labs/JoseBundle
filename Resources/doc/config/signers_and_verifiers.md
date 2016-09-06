@@ -65,6 +65,7 @@ jose:
                 - 'HS512'
 ```
 
+This will automatically create the services `jose.signer.SERVICE1` and `jose.verifier.SERVICE1`.
 Both services will support `HS256`, `HS384` and `HS512` algorithms.
 
 # Supported Signature Algorithms
