@@ -80,7 +80,7 @@ Have a look at [this page](Resources/doc/Use.md) to know hot to configure and us
 This bundle provides a Configuration Helper.
 This helper provides an easy way to create all services through the configuration of another bundle.
  
-Please read [this page](config/configuration_helper.md) to know how to easily configure the bundle from another bundle.
+Please read [this page](Resources/doc/config/configuration_helper.md) to know how to easily configure the bundle from another bundle.
 
 
 # Contributing
@@ -88,7 +88,7 @@ Please read [this page](config/configuration_helper.md) to know how to easily co
 Requests for new features, bug fixed and all other ideas to make this library useful are welcome.
 The best contribution you could provide is by fixing the [opened issues where help is wanted](https://github.com/Spomky-Labs/JoseBundle/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 
-Please make sure to [follow these best practices](doc/Contributing.md).
+Please make sure to [follow these best practices](Resources/doc/Contributing.md).
 
 # Licence
 
