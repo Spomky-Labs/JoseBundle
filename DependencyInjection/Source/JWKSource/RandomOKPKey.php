@@ -53,6 +53,9 @@ class RandomOKPKey extends RandomKey
         parent::addConfiguration($node);
     }
 
+    /**
+     * @return \Closure
+     */
     private static function checkCurve()
     {
         return function ($v) {

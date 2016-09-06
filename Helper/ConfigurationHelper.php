@@ -22,6 +22,7 @@ final class ConfigurationHelper
      * @param string   $name
      * @param string[] $header_checkers
      * @param string[] $claim_checkers
+     * @param bool     $is_public
      *
      * @return array
      */
@@ -49,6 +50,7 @@ final class ConfigurationHelper
      * @param string   $name
      * @param string[] $signature_algorithms
      * @param bool     $create_verifier
+     * @param bool     $is_public
      *
      * @return array
      */
@@ -76,6 +78,7 @@ final class ConfigurationHelper
     /**
      * @param string   $name
      * @param string[] $signature_algorithms
+     * @param bool     $is_public
      *
      * @return array
      */
@@ -104,6 +107,7 @@ final class ConfigurationHelper
      * @param string[] $content_encryption_algorithms
      * @param string[] $compression_methods
      * @param bool     $create_decrypter
+     * @param bool     $is_public
      *
      * @return array
      */
@@ -137,6 +141,7 @@ final class ConfigurationHelper
      * @param string[] $key_encryption_algorithms
      * @param string[] $content_encryption_algorithms
      * @param string[] $compression_methods
+     * @param bool     $is_public
      *
      * @return array
      */
@@ -167,6 +172,7 @@ final class ConfigurationHelper
      * @param string      $name
      * @param string      $signer
      * @param string|null $encrypter
+     * @param bool        $is_public
      *
      * @return array
      */
@@ -196,6 +202,7 @@ final class ConfigurationHelper
      * @param string      $verifier
      * @param string      $checker
      * @param string|null $decrypter
+     * @param bool        $is_public
      *
      * @return array
      */
