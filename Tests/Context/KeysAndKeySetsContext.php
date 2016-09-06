@@ -12,7 +12,6 @@
 namespace SpomkyLabs\JoseBundle\Features\Context;
 
 use Jose\Object\JWKSetInterface;
-use Jose\Object\StorableJWK;
 
 /**
  * Behat context trait.

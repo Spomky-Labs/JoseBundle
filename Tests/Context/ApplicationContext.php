@@ -139,9 +139,8 @@ trait ApplicationContext
      */
     public function iWaitSeconds($time)
     {
-        sleep((int)$time);
+        sleep((int) $time);
     }
-
 
     /**
      * @When I run command :line
