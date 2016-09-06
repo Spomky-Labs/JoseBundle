@@ -12,7 +12,6 @@
 namespace SpomkyLabs\JoseBundle\DependencyInjection;
 
 use Assert\Assertion;
-use SpomkyLabs\JoseBundle\DependencyInjection\Source;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -110,9 +109,7 @@ final class SpomkyLabsJoseBundleExtension extends Extension implements PrependEx
         }
     }
 
-    /**
-     *
-     */
+
     private function addDefaultSources()
     {
         $this->addServiceSource(new Source\JWTCreatorSource());

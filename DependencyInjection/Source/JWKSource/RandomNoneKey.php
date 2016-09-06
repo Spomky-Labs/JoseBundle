@@ -20,7 +20,7 @@ class RandomNoneKey extends RandomKey
     {
         $values = $config['additional_values'];
         $values['kty'] = 'none';
-        
+
         return $values;
     }
 

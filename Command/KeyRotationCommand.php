@@ -35,7 +35,7 @@ class KeyRotationCommand extends ContainerAwareCommand
                 'ttl',
                 InputArgument::OPTIONAL,
                 '',
-                3600*24*7
+                3600 * 24 * 7
             )
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command will create a new client.
@@ -53,11 +53,13 @@ EOT
         $key_name = $input->getArgument('key');
         if (!$this->getContainer()->has($key_name)) {
             $output->writeln(sprintf('<error>The key "%s" does not exist</error>', $key_name));
+
             return 1;
         }
         $key = $this->getContainer()->get($key_name);
         if (!$key instanceof StorableJWKInterface) {
             $output->writeln(sprintf('<error>The key "%s" is not a storable key</error>', $key_name));
+
             return 2;
         }
 
@@ -67,7 +69,7 @@ EOT
         } else {
             $ttl = $input->getArgument('ttl');
             $mtime = filemtime($key->getFilename());
-            if ($mtime+$ttl <= time()) {
+            if ($mtime + $ttl <= time()) {
                 $output->writeln(sprintf('The key "%s" exists but expired. It will be updated.', $key_name));
                 unlink($key->getFilename());
                 $key->getAll();

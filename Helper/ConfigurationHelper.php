@@ -10,10 +10,11 @@
  */
 
 namespace SpomkyLabs\JoseBundle\Helper;
+
 use Assert\Assertion;
 
 /**
- * This helper will help you to create services configuration
+ * This helper will help you to create services configuration.
  */
 final class ConfigurationHelper
 {
@@ -30,6 +31,7 @@ final class ConfigurationHelper
         Assertion::notEmpty($name);
         Assertion::allString($header_checkers);
         Assertion::allString($claim_checkers);
+
         return [
             'jose' => [
                 'checkers' => [
@@ -37,17 +39,16 @@ final class ConfigurationHelper
                         'is_public' => $is_public,
                         'claims'    => $claim_checkers,
                         'headers'   => $header_checkers,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @param string      $name
-     * @param string[]    $signature_algorithms
-     *
-     * @param bool        $create_verifier
+     * @param string   $name
+     * @param string[] $signature_algorithms
+     * @param bool     $create_verifier
      *
      * @return array
      */
@@ -58,6 +59,7 @@ final class ConfigurationHelper
         Assertion::allString($signature_algorithms);
         Assertion::notEmpty($signature_algorithms);
         Assertion::boolean($create_verifier);
+
         return [
             'jose' => [
                 'signers' => [
@@ -65,16 +67,15 @@ final class ConfigurationHelper
                         'is_public'       => $is_public,
                         'algorithms'      => $signature_algorithms,
                         'create_verifier' => $create_verifier,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @param string      $name
-     * @param string[]    $signature_algorithms
-     *
+     * @param string   $name
+     * @param string[] $signature_algorithms
      *
      * @return array
      */
@@ -84,25 +85,25 @@ final class ConfigurationHelper
         Assertion::notEmpty($name);
         Assertion::allString($signature_algorithms);
         Assertion::notEmpty($signature_algorithms);
+
         return [
             'jose' => [
                 'verifiers' => [
                     $name => [
                         'is_public'  => $is_public,
                         'algorithms' => $signature_algorithms,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @param string      $name
-     * @param string[]    $key_encryption_algorithms
-     * @param string[]    $content_encryption_algorithms
-     * @param string[]    $compression_methods
-     *
-     * @param bool        $create_decrypter
+     * @param string   $name
+     * @param string[] $key_encryption_algorithms
+     * @param string[] $content_encryption_algorithms
+     * @param string[] $compression_methods
+     * @param bool     $create_decrypter
      *
      * @return array
      */
@@ -115,6 +116,7 @@ final class ConfigurationHelper
         Assertion::allString($content_encryption_algorithms);
         Assertion::notEmpty($content_encryption_algorithms);
         Assertion::boolean($create_decrypter);
+
         return [
             'jose' => [
                 'encrypters' => [
@@ -124,18 +126,17 @@ final class ConfigurationHelper
                         'content_encryption_algorithms' => $content_encryption_algorithms,
                         'compression_methods'           => $compression_methods,
                         'create_decrypter'              => $create_decrypter,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * @param string      $name
-     * @param string[]    $key_encryption_algorithms
-     * @param string[]    $content_encryption_algorithms
-     * @param string[]    $compression_methods
-     *
+     * @param string   $name
+     * @param string[] $key_encryption_algorithms
+     * @param string[] $content_encryption_algorithms
+     * @param string[] $compression_methods
      *
      * @return array
      */
@@ -147,6 +148,7 @@ final class ConfigurationHelper
         Assertion::notEmpty($key_encryption_algorithms);
         Assertion::allString($content_encryption_algorithms);
         Assertion::notEmpty($content_encryption_algorithms);
+
         return [
             'jose' => [
                 'decrypters' => [
@@ -155,9 +157,9 @@ final class ConfigurationHelper
                         'key_encryption_algorithms'     => $key_encryption_algorithms,
                         'content_encryption_algorithms' => $content_encryption_algorithms,
                         'compression_methods'           => $compression_methods,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -175,6 +177,7 @@ final class ConfigurationHelper
         Assertion::string($signer);
         Assertion::notEmpty($signer);
         Assertion::nullOrString($encrypter);
+
         return [
             'jose' => [
                 'jwt_creators' => [
@@ -182,9 +185,9 @@ final class ConfigurationHelper
                         'is_public' => $is_public,
                         'signer'    => $signer,
                         'encrypter' => $encrypter,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -193,7 +196,6 @@ final class ConfigurationHelper
      * @param string      $verifier
      * @param string      $checker
      * @param string|null $decrypter
-     *
      *
      * @return array
      */
@@ -206,6 +208,7 @@ final class ConfigurationHelper
         Assertion::string($checker);
         Assertion::notEmpty($checker);
         Assertion::nullOrString($decrypter);
+
         return [
             'jose' => [
                 'jwt_loaders' => [
@@ -214,9 +217,9 @@ final class ConfigurationHelper
                         'verifier'  => $verifier,
                         'checker'   => $checker,
                         'decrypter' => $decrypter,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 }

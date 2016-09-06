@@ -40,7 +40,6 @@ class RandomECKey extends RandomKey
      */
     public function addConfiguration(NodeDefinition $node)
     {
-        
         $node
             ->children()
                 ->scalarNode('curve')
@@ -53,7 +52,7 @@ class RandomECKey extends RandomKey
             ->end();
         parent::addConfiguration($node);
     }
-    
+
     private static function checkCurve()
     {
         return function ($v) {
