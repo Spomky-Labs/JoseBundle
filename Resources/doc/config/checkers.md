@@ -13,10 +13,26 @@ jose:
     checkers:
         CHECKER1: # ID of the Signer. Must be unique
             is_public: true # The service created by the bundle will be public (default)
-            claim_checkers: # This checker will check the following claims
+            claim_checkers: # This checker will check the following claims (see below for the complete list)
                 - 'exp' # Expiration claim
                 - 'iat' # Issued at claim
                 - 'nbf' # Not Before claim
-            header_checkers: # This checker will check the following headers
+            header_checkers: # This checker will check the following headers (see below for the complete list)
                 - 'crit' # Critical header
 ```
+
+# Supported Claim and Header Checkers
+
+Hereafter the list of all checkers supported by this library.
+
+You may need to check additional claims or headers, then [read that page](../next/custom_checker.md) to know how to create custom checkers.
+
+# Supported Claim Checkers
+
+* [x] `exp`
+* [x] `iat`
+* [x] `nbf`
+
+# Supported Header Checkers
+
+* [x] `crit`
