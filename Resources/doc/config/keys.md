@@ -193,8 +193,9 @@ jose:
             none: # Type of key. In this case, the key is a none key.
                 storage_path: "/Path/To/The/Storage/File.key" # Path of the file
                 additional_values: # You can add custom values 
-                    alg: 'ECDH-ES'
-                    use: 'enc'
+                    kid: 'MY_NONE_KEY'
+                    use: 'sig'
+                    alg: 'none'
 ```
 
 ## Key Rotation
