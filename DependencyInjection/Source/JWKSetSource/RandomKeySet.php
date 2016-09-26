@@ -9,39 +9,48 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSource;
+namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-abstract class RandomKey implements JWKSourceInterface
+final class RandomKeySet implements JWKSetSourceInterface
 {
     /**
      * {@inheritdoc}
      */
     public function create(ContainerBuilder $container, $id, array $config)
     {
-        $definition = new Definition('Jose\Object\StorableJWK');
+        if (true === $config['is_rotatable']) {
+            $definition = new Definition('Jose\Object\RotatableJWKSet');
+            $method = 'createRotatableKeySet';
+        } else {
+            $definition = new Definition('Jose\Object\StorableJWKSet');
+            $method = 'createStorableKeySet';
+        }
+
         $definition->setFactory([
             new Reference('jose.factory.jwk'),
-            'createStorableKey',
+            $method,
         ]);
         $definition->setArguments([
             $config['storage_path'],
-            $this->getKeyConfig($config)
+            $config['key_configuration'],
+            $config['nb_keys'],
         ]);
         $definition->setPublic($config['is_public']);
         $container->setDefinition($id, $definition);
     }
 
     /**
-     * @param array $config
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    abstract protected function getKeyConfig(array $config);
+    public function getKeySet()
+    {
+        return 'auto';
+    }
 
     /**
      * {@inheritdoc}
@@ -54,8 +63,17 @@ abstract class RandomKey implements JWKSourceInterface
                     ->info('If true, the service will be public, else private.')
                     ->defaultTrue()
                 ->end()
+                ->booleanNode('is_rotatable')
+                    ->info('If true, the service will be a rotatable key, else just storable.')
+                    ->defaultFalse()
+                ->end()
+                ->integerNode('nb_keys')
+                    ->info('Number of keys in the key set.')
+                    ->isRequired()
+                    ->min(1)
+                ->end()
                 ->scalarNode('storage_path')->isRequired()->end()
-                ->arrayNode('additional_values')
+                ->arrayNode('key_configuration')
                     ->defaultValue([])
                     ->useAttributeAsKey('key')
                     ->prototype('variable')->end()

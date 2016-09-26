@@ -17,5 +17,14 @@
         <service id="jose.jwk_set_source.x5u" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource\X5U" public="false">
             <tag name="jose.jwk_set_source" />
         </service>
+        <service id="jose.jwk_set_source.auto" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource\RandomKeySet" public="false">
+            <tag name="jose.jwk_set_source" />
+        </service>
+        <service id="jose.jwk_set_source.jwksets" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource\JWKSets" public="false">
+            <tag name="jose.jwk_set_source" />
+        </service>
+        <service id="jose.jwk_set_source.public_jwkset" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource\PublicJWKSet" public="false">
+            <tag name="jose.jwk_set_source" />
+        </service>
     </services>
 </container>

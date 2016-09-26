@@ -9,39 +9,40 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSource;
+namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-abstract class RandomKey implements JWKSourceInterface
+class JWKSets implements JWKSetSourceInterface
 {
     /**
      * {@inheritdoc}
      */
     public function create(ContainerBuilder $container, $id, array $config)
     {
-        $definition = new Definition('Jose\Object\StorableJWK');
+        $definition = new Definition('Jose\Object\JWKSet');
         $definition->setFactory([
             new Reference('jose.factory.jwk'),
-            'createStorableKey',
+            'createKeySets',
         ]);
-        $definition->setArguments([
-            $config['storage_path'],
-            $this->getKeyConfig($config)
-        ]);
+        foreach ($config['id'] as $key_set_id) {
+            $ref = new Reference($key_set_id);
+            $definition->addMethodCall('addKeySet', [$ref]);
+        }
         $definition->setPublic($config['is_public']);
         $container->setDefinition($id, $definition);
     }
 
     /**
-     * @param array $config
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    abstract protected function getKeyConfig(array $config);
+    public function getKeySet()
+    {
+        return 'jwksets';
+    }
 
     /**
      * {@inheritdoc}
@@ -54,11 +55,9 @@ abstract class RandomKey implements JWKSourceInterface
                     ->info('If true, the service will be public, else private.')
                     ->defaultTrue()
                 ->end()
-                ->scalarNode('storage_path')->isRequired()->end()
-                ->arrayNode('additional_values')
-                    ->defaultValue([])
-                    ->useAttributeAsKey('key')
-                    ->prototype('variable')->end()
+                ->arrayNode('id')
+                    ->prototype('scalar')->end()
+                    ->isRequired()
                 ->end()
             ->end();
     }

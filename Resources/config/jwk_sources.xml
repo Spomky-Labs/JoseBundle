@@ -44,5 +44,9 @@
         <service id="jose.jwk_source.random.none" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSource\RandomNoneKey" public="false">
             <tag name="jose.jwk_source" />
         </service>
+
+        <service id="jose.jwk_source.random.jwkset" class="SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSource\JWKSet" public="false">
+            <tag name="jose.jwk_source" />
+        </service>
     </services>
 </container>

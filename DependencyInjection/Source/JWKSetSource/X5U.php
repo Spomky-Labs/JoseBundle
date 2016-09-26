@@ -31,6 +31,8 @@ class X5U implements JWKSetSourceInterface
         $definition->setArguments([
             $config['url'],
             $config['is_secured'],
+            $config['cache'],
+            $config['cache_ttl'],
         ]);
         $definition->setPublic($config['is_public']);
 
@@ -58,6 +60,8 @@ class X5U implements JWKSetSourceInterface
                 ->end()
                 ->scalarNode('url')->isRequired()->end()
                 ->booleanNode('is_secured')->defaultTrue()->end()
+                ->scalarNode('cache')->defaultNull()->end()
+                ->integerNode('cache_ttl')->defaultValue(0)->end()
             ->end();
     }
 }

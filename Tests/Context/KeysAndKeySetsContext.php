@@ -94,4 +94,14 @@ trait KeysAndKeySetsContext
             ));
         }
     }
+
+    /**
+     * @When I show JWKSet :id
+     */
+    public function iShowJWKSet($id)
+    {
+        $jwkset = $this->getContainer()->get($id);
+
+        dump(json_encode($jwkset));
+    }
 }

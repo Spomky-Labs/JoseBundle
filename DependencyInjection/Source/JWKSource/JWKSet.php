@@ -16,32 +16,31 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-abstract class RandomKey implements JWKSourceInterface
+class JWKSet implements JWKSourceInterface
 {
     /**
      * {@inheritdoc}
      */
     public function create(ContainerBuilder $container, $id, array $config)
     {
-        $definition = new Definition('Jose\Object\StorableJWK');
+        $definition = new Definition('Jose\Object\JWK');
         $definition->setFactory([
             new Reference('jose.factory.jwk'),
-            'createStorableKey',
+            'createFromKeySet',
         ]);
-        $definition->setArguments([
-            $config['storage_path'],
-            $this->getKeyConfig($config)
-        ]);
+        $definition->setArguments([$config['key_set'], $config['key_index']]);
         $definition->setPublic($config['is_public']);
+
         $container->setDefinition($id, $definition);
     }
 
     /**
-     * @param array $config
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    abstract protected function getKeyConfig(array $config);
+    public function getKey()
+    {
+        return 'jwkset';
+    }
 
     /**
      * {@inheritdoc}
@@ -54,11 +53,12 @@ abstract class RandomKey implements JWKSourceInterface
                     ->info('If true, the service will be public, else private.')
                     ->defaultTrue()
                 ->end()
-                ->scalarNode('storage_path')->isRequired()->end()
-                ->arrayNode('additional_values')
-                    ->defaultValue([])
-                    ->useAttributeAsKey('key')
-                    ->prototype('variable')->end()
+                ->scalarNode('key_set')
+                    ->info('The key set service.')
+                    ->isRequired()->end()
+                ->integerNode('key_index')
+                    ->info('The index of the key in the key set.')
+                    ->isRequired()
                 ->end()
             ->end();
     }
