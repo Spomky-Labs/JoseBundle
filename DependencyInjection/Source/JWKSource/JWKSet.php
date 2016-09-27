@@ -11,27 +11,27 @@
 
 namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSource;
 
+use SpomkyLabs\JoseBundle\DependencyInjection\Source\AbstractSource;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class JWKSet implements JWKSourceInterface
+class JWKSet extends AbstractSource implements JWKSourceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create(ContainerBuilder $container, $id, array $config)
+    public function createDefinition(ContainerBuilder $container, array $config)
     {
         $definition = new Definition('Jose\Object\JWK');
         $definition->setFactory([
             new Reference('jose.factory.jwk'),
             'createFromKeySet',
         ]);
-        $definition->setArguments([$config['key_set'], $config['key_index']]);
-        $definition->setPublic($config['is_public']);
+        $definition->setArguments([new Reference($config['key_set']), $config['index']]);
 
-        $container->setDefinition($id, $definition);
+        return $definition;
     }
 
     /**
@@ -47,16 +47,13 @@ class JWKSet implements JWKSourceInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        parent::addConfiguration($node);
         $node
             ->children()
-                ->booleanNode('is_public')
-                    ->info('If true, the service will be public, else private.')
-                    ->defaultTrue()
-                ->end()
                 ->scalarNode('key_set')
                     ->info('The key set service.')
                     ->isRequired()->end()
-                ->integerNode('key_index')
+                ->integerNode('index')
                     ->info('The index of the key in the key set.')
                     ->isRequired()
                 ->end()

@@ -11,17 +11,18 @@
 
 namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource;
 
+use SpomkyLabs\JoseBundle\DependencyInjection\Source\AbstractSource;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class PublicJWKSet implements JWKSetSourceInterface
+class PublicJWKSet extends AbstractSource implements JWKSetSourceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create(ContainerBuilder $container, $id, array $config)
+    public function createDefinition(ContainerBuilder $container, array $config)
     {
         $definition = new Definition('Jose\Object\JWKSet');
         $definition->setFactory([
@@ -30,8 +31,7 @@ class PublicJWKSet implements JWKSetSourceInterface
         ]);
         $definition->setArguments([new Reference($config['id'])]);
 
-        $definition->setPublic($config['is_public']);
-        $container->setDefinition($id, $definition);
+        return $definition;
     }
 
     /**
@@ -47,12 +47,9 @@ class PublicJWKSet implements JWKSetSourceInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        parent::addConfiguration($node);
         $node
             ->children()
-                ->booleanNode('is_public')
-                    ->info('If true, the service will be public, else private.')
-                    ->defaultTrue()
-                ->end()
                 ->scalarNode('id')
                     ->info('ID of the JWKSet to use.')
                     ->isRequired()

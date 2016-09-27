@@ -28,8 +28,7 @@ final class ConfigurationHelper
      */
     public static function getCheckerConfiguration($name, array $header_checkers, array $claim_checkers, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::allString($header_checkers);
         Assertion::allString($claim_checkers);
 
@@ -56,8 +55,7 @@ final class ConfigurationHelper
      */
     public static function getSignerConfiguration($name, array $signature_algorithms, $create_verifier = false, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::allString($signature_algorithms);
         Assertion::notEmpty($signature_algorithms);
         Assertion::boolean($create_verifier);
@@ -84,8 +82,7 @@ final class ConfigurationHelper
      */
     public static function getVerifierConfiguration($name, array $signature_algorithms, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::allString($signature_algorithms);
         Assertion::notEmpty($signature_algorithms);
 
@@ -113,8 +110,7 @@ final class ConfigurationHelper
      */
     public static function getEncrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $create_decrypter = false, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::allString($key_encryption_algorithms);
         Assertion::notEmpty($key_encryption_algorithms);
         Assertion::allString($content_encryption_algorithms);
@@ -147,8 +143,7 @@ final class ConfigurationHelper
      */
     public static function getDecrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::allString($key_encryption_algorithms);
         Assertion::notEmpty($key_encryption_algorithms);
         Assertion::allString($content_encryption_algorithms);
@@ -178,8 +173,7 @@ final class ConfigurationHelper
      */
     public static function getJWTCreatorConfiguration($name, $signer, $encrypter = null, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::string($signer);
         Assertion::notEmpty($signer);
         Assertion::nullOrString($encrypter);
@@ -208,8 +202,7 @@ final class ConfigurationHelper
      */
     public static function getJWTLoaderConfiguration($name, $verifier, $checker, $decrypter = null, $is_public = true)
     {
-        Assertion::string($name);
-        Assertion::notEmpty($name);
+        self::checkParameters($name, $is_public);
         Assertion::string($verifier);
         Assertion::notEmpty($verifier);
         Assertion::string($checker);
@@ -228,5 +221,103 @@ final class ConfigurationHelper
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param string $name
+     * @param int    $nb_keys
+     * @param array  $key_configuration
+     * @param bool   $is_rotatable
+     * @param bool   $is_public
+     *
+     * @return array
+     */
+    public static function getRandomJWKSetConfiguration($name, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
+    {
+        self::checkParameters($name, $is_public);
+        Assertion::integer($nb_keys);
+        Assertion::greaterThan($nb_keys, 0);
+        Assertion::boolean($is_rotatable);
+
+        return [
+            'jose' => [
+                'key_sets' => [
+                    $name => [
+                        'auto' => [
+                            'is_rotatable'      => $is_rotatable,
+                            'is_public'         => $is_public,
+                            'nb_keys'           => $nb_keys,
+                            'key_configuration' => $key_configuration,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param string $name
+     * @param string $jwkset
+     * @param bool   $is_public
+     *
+     * @return array
+     */
+    public static function getPublicJWKSetConfiguration($name, $jwkset, $is_public = true)
+    {
+        self::checkParameters($name, $is_public);
+        Assertion::string($jwkset);
+        Assertion::notEmpty($jwkset);
+
+        return [
+            'jose' => [
+                'key_sets' => [
+                    $name => [
+                        'public_jwkset' => [
+                            'is_public' => $is_public,
+                            'id'        => $jwkset,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param string   $name
+     * @param string[] $jwksets
+     * @param bool     $is_public
+     *
+     * @return array
+     */
+    public static function getJWKSetsConfiguration($name, array $jwksets, $is_public = true)
+    {
+        self::checkParameters($name, $is_public);
+        Assertion::isArray($jwksets);
+        Assertion::allString($jwksets);
+        Assertion::allNotEmpty($jwksets);
+
+        return [
+            'jose' => [
+                'key_sets' => [
+                    $name => [
+                        'jwksets' => [
+                            'is_public' => $is_public,
+                            'id'        => $jwksets,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param string $name
+     * @param bool   $is_public
+     */
+    private static function checkParameters($name, $is_public)
+    {
+        Assertion::string($name);
+        Assertion::notEmpty($name);
+        Assertion::boolean($is_public);
     }
 }

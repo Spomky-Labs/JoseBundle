@@ -20,7 +20,7 @@ class RandomECKey extends RandomKey
      */
     protected function getKeyConfig(array $config)
     {
-        $values = $config['additional_values'];
+        $values = $config['key_configuration'];
         $values['kty'] = 'EC';
         $values['crv'] = $config['curve'];
 

@@ -11,17 +11,18 @@
 
 namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource;
 
+use SpomkyLabs\JoseBundle\DependencyInjection\Source\AbstractSource;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class JKU implements JWKSetSourceInterface
+class JKU extends AbstractSource implements JWKSetSourceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create(ContainerBuilder $container, $id, array $config)
+    public function createDefinition(ContainerBuilder $container, array $config)
     {
         $definition = new Definition('Jose\Object\JWKSet');
         $definition->setFactory([
@@ -34,9 +35,8 @@ class JKU implements JWKSetSourceInterface
             $config['cache'],
             $config['cache_ttl'],
         ]);
-        $definition->setPublic($config['is_public']);
 
-        $container->setDefinition($id, $definition);
+        return $definition;
     }
 
     /**
@@ -52,12 +52,9 @@ class JKU implements JWKSetSourceInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        parent::addConfiguration($node);
         $node
             ->children()
-                ->booleanNode('is_public')
-                    ->info('If true, the service will be public, else private.')
-                    ->defaultTrue()
-                ->end()
                 ->scalarNode('url')->isRequired()->end()
                 ->booleanNode('is_secured')->defaultTrue()->end()
                 ->scalarNode('cache')->defaultNull()->end()

@@ -11,17 +11,18 @@
 
 namespace SpomkyLabs\JoseBundle\DependencyInjection\Source\JWKSetSource;
 
+use SpomkyLabs\JoseBundle\DependencyInjection\Source\AbstractSource;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class RandomKeySet implements JWKSetSourceInterface
+final class RandomKeySet extends AbstractSource implements JWKSetSourceInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create(ContainerBuilder $container, $id, array $config)
+    public function createDefinition(ContainerBuilder $container, array $config)
     {
         if (true === $config['is_rotatable']) {
             $definition = new Definition('Jose\Object\RotatableJWKSet');
@@ -40,8 +41,8 @@ final class RandomKeySet implements JWKSetSourceInterface
             $config['key_configuration'],
             $config['nb_keys'],
         ]);
-        $definition->setPublic($config['is_public']);
-        $container->setDefinition($id, $definition);
+
+        return $definition;
     }
 
     /**
@@ -57,12 +58,9 @@ final class RandomKeySet implements JWKSetSourceInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        parent::addConfiguration($node);
         $node
             ->children()
-                ->booleanNode('is_public')
-                    ->info('If true, the service will be public, else private.')
-                    ->defaultTrue()
-                ->end()
                 ->booleanNode('is_rotatable')
                     ->info('If true, the service will be a rotatable key, else just storable.')
                     ->defaultFalse()

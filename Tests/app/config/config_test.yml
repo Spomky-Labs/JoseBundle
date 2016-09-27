@@ -91,6 +91,10 @@ jose:
             public_jwkset:
                 id: 'jose.key_set.all_in_one'
     keys:
+        from_keyset:
+            jwkset:
+                key_set: 'jose.key_set.all_in_one'
+                index: 0
         key0:
             values:
                 values:
@@ -180,22 +184,22 @@ jose:
             rsa:
                 size: 4096
                 storage_path: "%kernel.cache_dir%/rsa"
-                additional_values:
+                key_configuration:
                     alg: "RS256"
         key8:
             none:
                 storage_path: "%kernel.cache_dir%/none"
-                additional_values:
+                key_configuration:
                     alg: "none"
         key9:
             ec:
                 curve: 'P-256'
                 storage_path: "%kernel.cache_dir%/ec"
-                additional_values:
+                key_configuration:
                     alg: "ES256"
         key10:
             oct:
                 size: 256
                 storage_path: "%kernel.cache_dir%/oct"
-                additional_values:
+                key_configuration:
                     alg: "HS256"
