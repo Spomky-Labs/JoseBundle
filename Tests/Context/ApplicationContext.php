@@ -131,6 +131,7 @@ trait ApplicationContext
             $this->application = new Application($this->getKernel());
             $this->application->add(new Command\RegenCommand());
             $this->application->add(new Command\RotateCommand());
+            $this->application->add(new Command\DeleteCommand());
         }
 
         return $this->application;
