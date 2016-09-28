@@ -81,7 +81,7 @@ final class SpomkyLabsJoseBundleExtension extends Extension implements PrependEx
     }
 
     /**
-     * {@inheritdoc}
+     * @return \SpomkyLabs\JoseBundle\DependencyInjection\Configuration
      */
     public function getConfiguration(array $configs, ContainerBuilder $container)
     {
