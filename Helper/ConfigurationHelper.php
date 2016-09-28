@@ -12,12 +12,146 @@
 namespace SpomkyLabs\JoseBundle\Helper;
 
 use Assert\Assertion;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * This helper will help you to create services configuration.
  */
 final class ConfigurationHelper
 {
+    const BUNDLE_ALIAS = 'jose';
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $header_checkers
+     * @param string[]                                                $claim_checkers
+     * @param bool                                                    $is_public
+     */
+    public static function addChecker(ContainerBuilder $container, $name, array $header_checkers, array $claim_checkers, $is_public = true)
+    {
+        $config = self::getCheckerConfiguration($name, $header_checkers, $claim_checkers, $is_public);
+            self::updateJoseConfiguration($container, $config, 'checkers');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $signature_algorithms
+     * @param bool                                                    $create_verifier
+     * @param bool                                                    $is_public
+     */
+    public static function addSigner(ContainerBuilder $container, $name, array $signature_algorithms, $create_verifier = false, $is_public = true)
+    {
+        $config = self::getSignerConfiguration($name, $signature_algorithms, $create_verifier, $is_public);
+        self::updateJoseConfiguration($container, $config, 'signers');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $signature_algorithms
+     * @param bool                                                    $is_public
+     */
+    public static function addVerifier(ContainerBuilder $container, $name, array $signature_algorithms, $is_public = true)
+    {
+        $config = self::getVerifierConfiguration($name, $signature_algorithms, $is_public);
+        self::updateJoseConfiguration($container, $config, 'verifiers');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $key_encryption_algorithms
+     * @param string[]                                                $content_encryption_algorithms
+     * @param string[]                                                $compression_methods
+     * @param bool                                                    $create_decrypter
+     * @param bool                                                    $is_public
+     */
+    public static function addEncrypter(ContainerBuilder $container, $name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $create_decrypter = false, $is_public = true)
+    {
+        $config = self::getEncrypterConfiguration($name, $key_encryption_algorithms, $content_encryption_algorithms, $compression_methods, $create_decrypter, $is_public);
+        self::updateJoseConfiguration($container, $config, 'encrypters');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $key_encryption_algorithms
+     * @param string[]                                                $content_encryption_algorithms
+     * @param string[]                                                $compression_methods
+     * @param bool                                                    $is_public
+     */
+    public static function addDecrypter(ContainerBuilder $container, $name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $is_public = true)
+    {
+        $config = self::getDecrypterConfiguration($name, $key_encryption_algorithms, $content_encryption_algorithms, $compression_methods, $is_public);
+        self::updateJoseConfiguration($container, $config, 'decrypters');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string                                                  $signer
+     * @param string|null                                             $encrypter
+     * @param bool                                                    $is_public
+     */
+    public static function addJWTCreator(ContainerBuilder $container, $name, $signer, $encrypter = null, $is_public = true)
+    {
+        $config = self::getJWTCreatorConfiguration($name, $signer, $encrypter, $is_public);
+        self::updateJoseConfiguration($container, $config, 'jwt_creators');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string                                                  $verifier
+     * @param string                                                  $checker
+     * @param string|null                                             $decrypter
+     * @param bool                                                    $is_public
+     */
+    public static function addJWTLoader(ContainerBuilder $container, $name, $verifier, $checker, $decrypter = null, $is_public = true)
+    {
+        $config = self::getJWTLoaderConfiguration($name, $verifier, $checker, $decrypter, $is_public);
+        self::updateJoseConfiguration($container, $config, 'jwt_loaders');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param int                                                     $nb_keys
+     * @param array                                                   $key_configuration
+     * @param bool                                                    $is_rotatable
+     * @param bool                                                    $is_public
+     */
+    public static function addRandomJWKSet(ContainerBuilder $container, $name, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
+    {
+        $config = self::getRandomJWKSetConfiguration($name, $nb_keys, $key_configuration, $is_rotatable, $is_public);
+        self::updateJoseConfiguration($container, $config, 'key_sets');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string                                                  $jwkset
+     * @param bool                                                    $is_public
+     */
+    public static function addPublicJWKSet(ContainerBuilder $container, $name, $jwkset, $is_public = true)
+    {
+        $config = self::getPublicJWKSetConfiguration($name, $jwkset, $is_public);
+        self::updateJoseConfiguration($container, $config, 'key_sets');
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param string                                                  $name
+     * @param string[]                                                $jwksets
+     * @param bool                                                    $is_public
+     */
+    public static function addJWKSets(ContainerBuilder $container, $name, array $jwksets, $is_public = true)
+    {
+        $config = self::getJWKSetsConfiguration($name, $jwksets, $is_public);
+        self::updateJoseConfiguration($container, $config, 'key_sets');
+    }
+
     /**
      * @param string   $name
      * @param string[] $header_checkers
@@ -33,7 +167,7 @@ final class ConfigurationHelper
         Assertion::allString($claim_checkers);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'checkers' => [
                     $name => [
                         'is_public' => $is_public,
@@ -61,7 +195,7 @@ final class ConfigurationHelper
         Assertion::boolean($create_verifier);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'signers' => [
                     $name => [
                         'is_public'       => $is_public,
@@ -87,7 +221,7 @@ final class ConfigurationHelper
         Assertion::notEmpty($signature_algorithms);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'verifiers' => [
                     $name => [
                         'is_public'  => $is_public,
@@ -118,7 +252,7 @@ final class ConfigurationHelper
         Assertion::boolean($create_decrypter);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'encrypters' => [
                     $name => [
                         'is_public'                     => $is_public,
@@ -150,7 +284,7 @@ final class ConfigurationHelper
         Assertion::notEmpty($content_encryption_algorithms);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'decrypters' => [
                     $name => [
                         'is_public'                     => $is_public,
@@ -179,7 +313,7 @@ final class ConfigurationHelper
         Assertion::nullOrString($encrypter);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'jwt_creators' => [
                     $name => [
                         'is_public' => $is_public,
@@ -210,7 +344,7 @@ final class ConfigurationHelper
         Assertion::nullOrString($decrypter);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'jwt_loaders' => [
                     $name => [
                         'is_public' => $is_public,
@@ -240,7 +374,7 @@ final class ConfigurationHelper
         Assertion::boolean($is_rotatable);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'key_sets' => [
                     $name => [
                         'auto' => [
@@ -269,7 +403,7 @@ final class ConfigurationHelper
         Assertion::notEmpty($jwkset);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'key_sets' => [
                     $name => [
                         'public_jwkset' => [
@@ -297,7 +431,7 @@ final class ConfigurationHelper
         Assertion::allNotEmpty($jwksets);
 
         return [
-            'jose' => [
+            self::BUNDLE_ALIAS => [
                 'key_sets' => [
                     $name => [
                         'jwksets' => [
@@ -319,5 +453,43 @@ final class ConfigurationHelper
         Assertion::string($name);
         Assertion::notEmpty($name);
         Assertion::boolean($is_public);
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return array
+     */
+    private static function getJoseConfiguration(ContainerBuilder $container)
+    {
+        return current($container->getExtensionConfig(self::BUNDLE_ALIAS));
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param array                                                   $config
+     * @param string                                                  $element
+     */
+    private static function updateJoseConfiguration(ContainerBuilder $container, array $config, $element)
+    {
+        self::checkJoseBundleEnabled($container);
+        $jose_config = self::getJoseConfiguration($container);
+        $jose_config[$element] = array_merge(
+            $jose_config[$element],
+            $config[self::BUNDLE_ALIAS][$element]
+        );
+        $container->prependExtensionConfig(self::BUNDLE_ALIAS, $config);
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @throws \InvalidArgumentException
+     */
+    private static function checkJoseBundleEnabled(ContainerBuilder $container)
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+        Assertion::keyExists($bundles, 'SpomkyLabsJoseBundle', 'The "Spomky-Labs/JoseBundle" must be enabled.');
+
     }
 }
