@@ -109,7 +109,6 @@ final class SpomkyLabsJoseBundleExtension extends Extension implements PrependEx
         }
     }
 
-
     private function addDefaultSources()
     {
         $this->addServiceSource(new Source\JWTCreatorSource());
