@@ -1,8 +1,7 @@
 Custom Algorithm
 ================
 
-This bundle is based on the [spomky-Labs/jose](https://github.com/Spomky-Labs/jose) library that provides dozen of algorithms.
-But you may need to use your own algorithm.
+The [spomky-Labs/jose](https://github.com/Spomky-Labs/jose) library already provides dozen of algorithms, but you may need to use your own algorithm.
 
 In the following example, we will create a dummy signature algorithm that produces signature with the `MD5` hash of the input and adds `--SIGNED--` at the end.
 

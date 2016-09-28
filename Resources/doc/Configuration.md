@@ -29,7 +29,6 @@ Checker managers can be created automatically using this bundle and are availabl
 
 Please read [this page](config/checkers.md) to know how to create your Checker Manager Services.
 
-
 # Encrypters and Decrypters
 
 The Encrypters and Decrypters services are used to **encrypt** and **decrypt** JWE objects.
