@@ -31,7 +31,7 @@ abstract class RandomKey extends AbstractSource implements JWKSourceInterface
         ]);
         $definition->setArguments([
             $config['storage_path'],
-            $this->getKeyConfig($config)
+            $this->getKeyConfig($config),
         ]);
 
         return $definition;

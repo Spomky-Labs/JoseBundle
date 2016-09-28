@@ -81,6 +81,5 @@ EOT
         } else {
             $output->writeln(sprintf('The key set "%s" has not expired.', $service_name));
         }
-
     }
 }
