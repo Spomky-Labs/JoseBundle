@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony2 Jose Bundle",
     "keywords": ["JWS", "JWT", "JWE", "JWA", "JWK", "JWKSet", "Jose", "Jot", "Bundle", "Symfony"],
-    "homepage": "https://github.com/Spomky-Labs/JoseBundle",
+    "homepage": "https://github.com/Spomky-Labs/jose-bundle",
     "license": "MIT",
     "authors": [
         {
