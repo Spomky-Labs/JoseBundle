@@ -161,7 +161,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getCheckerConfiguration($name, array $header_checkers, array $claim_checkers, $is_public = true)
+    private static function getCheckerConfiguration($name, array $header_checkers, array $claim_checkers, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::allString($header_checkers);
@@ -188,7 +188,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getSignerConfiguration($name, array $signature_algorithms, $create_verifier = false, $is_public = true)
+    private static function getSignerConfiguration($name, array $signature_algorithms, $create_verifier = false, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::allString($signature_algorithms);
@@ -215,7 +215,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getVerifierConfiguration($name, array $signature_algorithms, $is_public = true)
+    private static function getVerifierConfiguration($name, array $signature_algorithms, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::allString($signature_algorithms);
@@ -243,7 +243,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getEncrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $create_decrypter = false, $is_public = true)
+    private static function getEncrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $create_decrypter = false, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::allString($key_encryption_algorithms);
@@ -276,7 +276,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getDecrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $is_public = true)
+    private static function getDecrypterConfiguration($name, array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF'], $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::allString($key_encryption_algorithms);
@@ -306,7 +306,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getJWTCreatorConfiguration($name, $signer, $encrypter = null, $is_public = true)
+    private static function getJWTCreatorConfiguration($name, $signer, $encrypter = null, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::string($signer);
@@ -335,7 +335,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getJWTLoaderConfiguration($name, $verifier, $checker, $decrypter = null, $is_public = true)
+    private static function getJWTLoaderConfiguration($name, $verifier, $checker, $decrypter = null, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::string($verifier);
@@ -368,7 +368,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getRandomJWKSetConfiguration($name, $storage_path, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
+    private static function getRandomJWKSetConfiguration($name, $storage_path, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::string($storage_path);
@@ -401,7 +401,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getPublicJWKSetConfiguration($name, $jwkset, $is_public = true)
+    private static function getPublicJWKSetConfiguration($name, $jwkset, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::string($jwkset);
@@ -428,7 +428,7 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getJWKSetsConfiguration($name, array $jwksets, $is_public = true)
+    private static function getJWKSetsConfiguration($name, array $jwksets, $is_public = true)
     {
         self::checkParameters($name, $is_public);
         Assertion::isArray($jwksets);
