@@ -37,12 +37,6 @@ Feature: This bundle is able to use keys and key sets
     When the service "jose.key_set.auto_signature" should be an object that implements "\Jose\Object\JWKSetInterface"
     And the keyset in the service "jose.key_set.auto_signature" contains 5 keys
 
-  Scenario: A Rotatable Key Set created using the configuration helper contains the expected number of keys
-    When the service "jose.key_set.from_configuration_helper" should be an object that implements "\Jose\Object\RotatableInterface"
-    When the service "jose.key_set.from_configuration_helper" should be an object that implements "\Jose\Object\StorableInterface"
-    When the service "jose.key_set.from_configuration_helper" should be an object that implements "\Jose\Object\JWKSetInterface"
-    And the keyset in the service "jose.key_set.from_configuration_helper" contains 2 keys
-
   Scenario: A Key Set of Key Sets contains the expected number of keys
     When the service "jose.key_set.all_in_one" should be an object that implements "\Jose\Object\JWKSets"
     When the service "jose.key_set.all_in_one" should be an object that implements "\Jose\Object\JWKSetInterface"

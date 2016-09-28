@@ -142,7 +142,7 @@ use SpomkyLabs\JoseBundle\Helper\ConfigurationHelper;
 public function prepend(ContainerBuilder $container)
 {
     //We add the checker (last argument set the service as private as we should not use it directly).
-    ConfigurationHelper::addChecker($container, 'main', ['exp', 'iat', 'nbf'], ['crit'], false);
+    ConfigurationHelper::addChecker($container, 'main', ['crit'], ['exp', 'iat', 'nbf'], false);
     
     //We add our verifier (private)
     ConfigurationHelper::addVerifier($container, 'main', ['RS256'], false);
@@ -167,7 +167,7 @@ public function prepend(ContainerBuilder $container)
     ConfigurationHelper::addRandomJWKSet($container, 'encryption_keys', '%kernel.cache_dir%/encryption_keys.keyset', 2, ['kty'  => 'RSA', 'size' => 4096, 'alg'  => "RSA-OAEP-256", 'use'  => "enc"], true, true);
     ConfigurationHelper::addJWKSets($container, 'all_keys', ['jose.key_set.signature_keys', 'jose.key_set.encryption_keys']);
     ConfigurationHelper::addPublicJWKSet($container, 'all_public_keys', 'jose.key_set.all_keys');
-    ConfigurationHelper::addChecker($container, 'main', ['exp', 'iat', 'nbf'], ['crit'], false);
+    ConfigurationHelper::addChecker($container, 'main', ['crit'], ['exp', 'iat', 'nbf'], false);
     ConfigurationHelper::addVerifier($container, 'main', ['RS256'], false);
     ConfigurationHelper::addDecrypter($container, 'main', ['RSA-OAEP-256'], ['A256GCM'], ['DEF'], false);
     ConfigurationHelper::addJWTLoader($container, 'main', 'jose.verifier.main', 'jose.checker.main', 'jose.decrypter.main');

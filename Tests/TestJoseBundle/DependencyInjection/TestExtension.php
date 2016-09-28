@@ -56,8 +56,17 @@ final class TestExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
-        ConfigurationHelper::addChecker($container, 'test', ['crit'], ['iat', 'nbf', 'exp'], true);
-        ConfigurationHelper::addRandomJWKSet($container, 'from_configuration_helper', '%kernel.cache_dir%/from_configuration_helper.keyset', 2, ['kty'=>'RSA', 'size'=>1024], true, true);
+        ConfigurationHelper::addChecker($container, 'test', ['crit'], ['iat', 'nbf', 'exp']);
+        ConfigurationHelper::addRandomJWKSet($container, 'from_configuration_helper', '%kernel.cache_dir%/from_configuration_helper.keyset', 2, ['kty'=>'RSA', 'size'=>1024], true);
+        ConfigurationHelper::addJWKSets($container, 'all_in_one_from_configuration_helper', ['jose.key_set.from_configuration_helper']);
+        ConfigurationHelper::addPublicJWKSet($container, 'all_in_one_public_from_configuration_helper', 'jose.key_set.from_configuration_helper');
 
+        ConfigurationHelper::addChecker($container, 'from_configuration_helper', ['crit'], ['exp', 'iat', 'nbf']);
+        ConfigurationHelper::addSigner($container, 'from_configuration_helper', ['RS256']);
+        ConfigurationHelper::addVerifier($container, 'from_configuration_helper', ['RS256']);
+        ConfigurationHelper::addEncrypter($container, 'from_configuration_helper', ['RSA-OAEP-256'], ['A256GCM'], ['DEF']);
+        ConfigurationHelper::addDecrypter($container, 'from_configuration_helper', ['RSA-OAEP-256'], ['A256GCM'], ['DEF']);
+        ConfigurationHelper::addJWTLoader($container, 'from_configuration_helper', 'jose.verifier.from_configuration_helper', 'jose.checker.from_configuration_helper', 'jose.decrypter.from_configuration_helper');
+        ConfigurationHelper::addJWTCreator($container, 'from_configuration_helper', 'jose.signer.from_configuration_helper', 'jose.encrypter.from_configuration_helper');
     }
 }
