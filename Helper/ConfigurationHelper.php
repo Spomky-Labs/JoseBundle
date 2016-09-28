@@ -117,14 +117,15 @@ final class ConfigurationHelper
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param string                                                  $name
+     * @param string                                                  $storage_path
      * @param int                                                     $nb_keys
      * @param array                                                   $key_configuration
      * @param bool                                                    $is_rotatable
      * @param bool                                                    $is_public
      */
-    public static function addRandomJWKSet(ContainerBuilder $container, $name, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
+    public static function addRandomJWKSet(ContainerBuilder $container, $name, $storage_path, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
     {
-        $config = self::getRandomJWKSetConfiguration($name, $nb_keys, $key_configuration, $is_rotatable, $is_public);
+        $config = self::getRandomJWKSetConfiguration($name, $storage_path, $nb_keys, $key_configuration, $is_rotatable, $is_public);
         self::updateJoseConfiguration($container, $config, 'key_sets');
     }
 
@@ -359,6 +360,7 @@ final class ConfigurationHelper
 
     /**
      * @param string $name
+     * @param string $storage_path
      * @param int    $nb_keys
      * @param array  $key_configuration
      * @param bool   $is_rotatable
@@ -366,9 +368,11 @@ final class ConfigurationHelper
      *
      * @return array
      */
-    public static function getRandomJWKSetConfiguration($name, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
+    public static function getRandomJWKSetConfiguration($name, $storage_path, $nb_keys, array $key_configuration, $is_rotatable = false, $is_public = true)
     {
         self::checkParameters($name, $is_public);
+        Assertion::string($storage_path);
+        Assertion::notEmpty($storage_path);
         Assertion::integer($nb_keys);
         Assertion::greaterThan($nb_keys, 0);
         Assertion::boolean($is_rotatable);
@@ -382,6 +386,7 @@ final class ConfigurationHelper
                             'is_public'         => $is_public,
                             'nb_keys'           => $nb_keys,
                             'key_configuration' => $key_configuration,
+                            'storage_path'      => $storage_path,
                         ],
                     ],
                 ],
@@ -457,28 +462,18 @@ final class ConfigurationHelper
 
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     *
-     * @return array
-     */
-    private static function getJoseConfiguration(ContainerBuilder $container)
-    {
-        return current($container->getExtensionConfig(self::BUNDLE_ALIAS));
-    }
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param array                                                   $config
      * @param string                                                  $element
      */
     private static function updateJoseConfiguration(ContainerBuilder $container, array $config, $element)
     {
         self::checkJoseBundleEnabled($container);
-        $jose_config = self::getJoseConfiguration($container);
-        $jose_config[$element] = array_merge(
-            $jose_config[$element],
-            $config[self::BUNDLE_ALIAS][$element]
-        );
-        $container->prependExtensionConfig(self::BUNDLE_ALIAS, $config);
+        $jose_config = current($container->getExtensionConfig(self::BUNDLE_ALIAS));
+        if (!isset($jose_config[$element])) {
+            $jose_config[$element] = [];
+        }
+        $jose_config[$element] = array_merge($jose_config[$element], $config[self::BUNDLE_ALIAS][$element]);
+        $container->prependExtensionConfig(self::BUNDLE_ALIAS, $jose_config);
     }
 
     /**

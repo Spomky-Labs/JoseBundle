@@ -11,9 +11,7 @@
 
 namespace SpomkyLabs\TestJoseBundle\DependencyInjection;
 
-use Assert\Assertion;
 use SpomkyLabs\JoseBundle\Helper\ConfigurationHelper;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -22,6 +20,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 final class TestExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @var string
+     */
     private $alias;
 
     /**
@@ -32,37 +33,31 @@ final class TestExtension extends Extension implements PrependExtensionInterface
         $this->alias = $alias;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $processor = new Processor();
-        $configuration = new Configuration($this->getAlias());
-
-        /*$config = */$processor->processConfiguration($configuration, $configs);
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getAlias()
     {
         return $this->alias;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function prepend(ContainerBuilder $container)
     {
-        $bundles = $container->getParameter('kernel.bundles');
-        Assertion::keyExists($bundles, 'SpomkyLabsJoseBundle', 'The "Spomky-Labs/JoseBundle" must be enabled.');
-        $jose_config = current($container->getExtensionConfig('jose'));
+        ConfigurationHelper::addChecker($container, 'test', ['crit'], ['iat', 'nbf', 'exp'], true);
+        ConfigurationHelper::addRandomJWKSet($container, 'from_configuration_helper', '%kernel.cache_dir%/from_configuration_helper.keyset', 2, ['kty'=>'RSA', 'size'=>1024], true, true);
 
-        $checker_config = ConfigurationHelper::getCheckerConfiguration('test', ['crit'], ['iat', 'nbf', 'exp']);
-        array_merge(
-            $jose_config,
-            $checker_config
-        );
-
-        $container->prependExtensionConfig('jose', $jose_config);
     }
 }
