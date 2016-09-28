@@ -72,7 +72,6 @@ final class JWKSource implements SourceInterface
                 ->arrayNode('keys')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
-                        ->performNoDeepMerging()
                         ->children();
         foreach ($this->getJWKSources() as $name => $source) {
             $sourceNode = $sourceNodeBuilder->arrayNode($name)->canBeUnset();
